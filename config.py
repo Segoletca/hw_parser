@@ -1,4 +1,10 @@
-import  logging 
+import logging 
+from dataclasses import dataclass
+
+# PATHS
+@dataclass
+class Paths():
+    DATA_PATH = "./data"
 
 def configure_logging():
     logging.basicConfig(
