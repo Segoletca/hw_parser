@@ -1,5 +1,4 @@
 import requests as re
-from http import HTTPStatus
 from logging import getLogger
 import json
 from config import Paths
@@ -14,12 +13,15 @@ Raises:
     SystemExit: _description_
 """
 
+
 class Parser:
-    def __init__(self, url):
+    def __init__(self, url, data):
         self.savingObj = None
         self.fileName = None
         self.url = url
-        self.page = re.get(self.url)
+        self.base_url = url
+        self.data = data
+        self.page = re.get(self.url, self.data)
         if self.page.status_code == 404:
             log.warning("Ошибка get запроса!")
             log.error("Не найдено! Возможно URL указан неверно.")
@@ -28,14 +30,13 @@ class Parser:
             
         self.headers = self.page.headers
         # self.test = self.page.json
-        
-    def res(self):
-        print()
-
-        
+   
+   
+    def getPageNoExept(self):
+        self.page = re.get(self.url, self.data)
+   
     def saveJson(self):
         # Needs: - fileName and savingObj
-
         with open(f"{Paths.DATA_PATH}/{self.fileName}", "w") as file:
             json.dump(self.savingObj, file, indent=4)
 
@@ -49,3 +50,15 @@ class Parser:
         
         self.fileName, self.savingObj = None, None
         
+    def saveBody(self):
+        self.fileName = "raw_body_out.json"
+        self.savingObj = dict(self.page.text)
+        
+        self.saveJson()
+        log.info(f"Файл {self.fileName} был сохранен.")
+    
+    # def res(self):
+    #     # with open(f"{Paths.DATA_PATH}/raw_body_out.json", "w") as file:
+    #     #     file.write(self.page.text)
+    #     self.saveHeader()
+    #     print()
