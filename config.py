@@ -3,8 +3,14 @@ from dataclasses import dataclass
 
 # PATHS
 @dataclass
-class Paths():
+class Paths:
     DATA_PATH = "./data"
+
+
+@dataclass
+class Const:
+    LIMIT_FOR_PAGE_PARSING = 100
+    
 
 def configure_logging():
     logging.basicConfig(
