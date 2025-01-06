@@ -8,7 +8,8 @@ from config import Paths
 log = getLogger(__name__)
 
 """_summary_
-
+    - Общий метод для сохранения json `saveJson`
+    - Метод для сохранения заголовков `saveHeader`
 Raises:
     SystemExit: _description_
 """
