@@ -9,31 +9,36 @@ log = getLogger(__name__)
 
 class Searcher(Parser):
     def htmlSearchOnePage(self):
-        self.bsoup = BeautifulSoup(self.page.text, 'html.parser')
+        self.bsoup = BeautifulSoup(self.response.text, 'html.parser')
         # print(self.bsoup.title)
         # print(self.bsoup)
-        ids = self.bsoup.find_all(id=True)
-        i = 0
-        for element in ids:
-            id_value = element.get('data-test-id')
-            content = element.get_text()
-            
-            if id_value == "articles-list-item":
-                print(f"ID: {id_value}")
-                print(f"Содержимое: {content}\n")
-                i += 1
+        # blocks = self.bsoup.find(attrs={"class": "tm-articles-list__item"})
+        blocks = self.bsoup.find_all(attrs={"data-test-id": "article-snippet-title-link"})
+        
+        for element in blocks:
+            print(element.text)
+        
+        # ids = self.bsoup.find_all(id=True)
+        # i = 0
+        # for element in ids:
+        #     id_value = element.get('data-test-id')
+        #     content = element.get_text()
+        
+        #     if id_value == "articles-list-item":
+        #         print(f"ID: {id_value}")
+        #         print(f"Содержимое: {content}\n")
+        #         i += 1
 
 
     def htmlSearchAllPages(self):
         for page_num in range(1, Const.LIMIT_FOR_PAGE_PARSING):
             self.url = self.base_url + f"page{page_num}"
-            self.getPageNoExept()
-            if self.page.status_code != 200:
+            self.getResponseNoExept()
+            if self.response.status_code != 200:
                 break
             
-            self.htmlParserOnePage()
-            log.info(f"Найдено {page_num} страниц")
-        
+            self.htmlSearchOnePage()
+        log.info(f"Найдено {page_num} страниц")
         # elements = self.bsoup.find_all(id="specific_id")
         # for element in elements:
         #     content = element.get_text()
