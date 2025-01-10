@@ -15,6 +15,8 @@ class Const:
     PAGE = "index.html"
     # Имя файла для сохранения заголовков страницы
     HEAD = "headers.json"
+    
+    ARCTICLES = "search_articles.md"
 
 def configure_logging():
     logging.basicConfig(
