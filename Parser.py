@@ -46,3 +46,9 @@ class Parser:
         
         self.soup = BeautifulSoup(src, "lxml")
 
+    # def get_new_response(self, **kwargs):
+    #     if "url" in kwargs.keys():
+    #         self.url = kwargs["url"]
+    #     print("kwargs:", self.url)
+    #     self.response = req.get(self.url, params=self.data, headers=self.headers)
+        # print(self.response.url)

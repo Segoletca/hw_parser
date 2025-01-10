@@ -2,10 +2,11 @@ import logging
 
 from config import configure_logging
 from Searcher import Searcher
+import time
 
+log = logging.getLogger(__name__)
 
 def main():
-    log = logging.getLogger(__name__)
     log.info("Start program!")
     
     url = "https://habr.com/ru/search/"
@@ -14,7 +15,7 @@ def main():
     
     domen = "https://habr.com"
     
-    header = {"user-agent": "user"}
+    headers = {"user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"}
     
     data = {
         # "q": "http",
@@ -25,8 +26,9 @@ def main():
 
     # Parser(url).load_src()
     
-    searcher = Searcher(url, domen, data)
+    searcher = Searcher(url, domen, data, headers)
     searcher.search()
+    
     searcher.get_all_articles()
     
     # searcher.save_articles_link()
@@ -36,4 +38,6 @@ def main():
 
 if __name__ == '__main__':
     configure_logging()
+    start_time = time.time()
     main()
+    log.info(f"Время выполнения - {round(time.time() - start_time, 2)} сек")

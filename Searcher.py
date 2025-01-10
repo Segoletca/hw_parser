@@ -1,17 +1,16 @@
 from logging import getLogger
 from SearchDriver import SearchDriver
-from config import Const
+from config import Const, Paths
+from pathlib import Path
+import requests as req
+import asyncio
 
 log = getLogger(__name__)
 
 class Searcher(SearchDriver):
     def search(self):
         self.response_by_query()
-        
-        if not len(self.raw_query):
-            log.error("Введите ключевые слова для запроса!")
-            raise SystemExit
-        
+                
         self.collect_articles()
     
     # def get_all_articles_async(self):
@@ -21,9 +20,71 @@ class Searcher(SearchDriver):
         # print(self.data)
         # print(self.domen)
         
-        for page_num in range(1, Const.LIMIT_FOR_PAGE_PARSING):
-            self.url_with_page = self.url + f"page{page_num}"
-            self.
+        
+        self.test_collect_all_page = dict()
+        
+        
+        
+        async def job(page_url):
+            query = {"q": f"{self.handle_query()}"}
+            query.update(self.data)
+            data = query
+            
+            # response = req.get(page_url, params=data, headers=self.headers)
+            
+            async with req.get(page_url, params=data, headers=self.headers) as response:
+                self.collect_articles(response_txt=response.text)
+                self.test_collect_all_page.update(self.articles_dict)
+        
+        async def gather_data():
+            tasks = []
+            for page_num in range(1, 10):
+                page_url = self.url + f"page{page_num}"
+                task = asyncio.create_task(job(page_url))
+                tasks.append(task)
+            
+            await asyncio.gather(*tasks)
+        
+        
+        asyncio.run(gather_data())
+        
+        
+        # for page_num in range(1, 10): # Const.LIMIT_FOR_PAGE_PARSING
+        #     self.url_with_page = self.url + f"page{page_num}"
+            
+        #     query = {"q": f"{self.handle_query()}"}
+        #     query.update(self.data)
+        #     data = query
+            
+        #     response = req.get(self.url_with_page, params=data, headers=self.headers)
+            
+        #     self.collect_articles(response_txt=response.text)
+        #     self.test_collect_all_page.update(self.articles_dict)
+        # self.articles_dict = dict()
+        # self.articles_dict.update(self.test_collect_all_page)
+        # # log.debug(f"From all page: {self.articles_dict}")
+        # # self.response_by_query()
+
+        
+        # # Save
+        # self.create_file_for_articles_link()
+        # with open(Path(Paths.DATA_PATH, Const.ARCTICLES), "a") as file:
+        #     file.write(f'\n## Страница {page_num}\n')
+        # self.save_articles_link()
+        # log.debug(self.response.url)
+        # # print(self.url_with_page)
+        
+        # # print(self.url)
+            
+
+
+
+
+
+
+
+
+
 
 
 #     def htmlSearchAllPages(self):

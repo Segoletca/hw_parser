@@ -12,28 +12,46 @@ log = getLogger(__name__)
 
 class SearchDriver(Parser):
     ## Небезопасный метод!!!
-    def __handle_query(self):
+    def handle_query(self):
         self.raw_query = sys.argv[1:]
+        
+        if not len(self.raw_query):
+            log.error("Введите ключевые слова для запроса!")
+            raise SystemExit
+        
         query = "+".join(self.raw_query)
         return query
 
     def response_by_query(self):
-        query = {"q": f"{self.__handle_query()}"}
+        query = {"q": f"{self.handle_query()}"}
         query.update(self.data)
         self.data = query
 
         self.load_src()
+        log.debug(f"Сообщение из response_by_query, url: {self.response.url}")
         log.info(f"Used URL: {self.response.url}")
     
-    def save_articles_link(self):
+    def create_file_for_articles_link(self):
         with open(Path(Paths.DATA_PATH, Const.ARCTICLES), "w") as file:
             file.write(f'## Список статей по запросу "{" ".join(self.raw_query)}"\n\n')
-            
+    
+    def save_articles_link(self):
+        with open(Path(Paths.DATA_PATH, Const.ARCTICLES), "a") as file:
+            # file.write(f'## Список статей по запросу "{" ".join(self.raw_query)}"\n\n')
             for title, link in self.articles_dict.items():
                 file.write(f"- [{title}]({link})\n")
     
-    def collect_articles(self):
-        self.soup = BeautifulSoup(self.response.text, "lxml")
+    def save_md_file(self):
+        self.create_file_for_articles_link()
+        self.save_articles_link()
+    
+    def collect_articles(self, **kwargs):
+        if "response_txt" in kwargs.keys():
+            response_txt = kwargs["response_txt"]
+        else:
+            response_txt = self.response.text
+        
+        self.soup = BeautifulSoup(response_txt, "lxml")
         # log.debug(self.soup.find("body").text)
         
         with open(Path(Paths.DATA_PATH, Const.PAGE), "w", encoding="utf-8") as file:
