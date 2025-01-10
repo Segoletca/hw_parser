@@ -17,7 +17,8 @@ Raises:
 
 
 class Parser:
-    def __init__(self, url, data=None, headers=None):
+    def __init__(self, url, domen=None, data=None, headers=None):
+        self.domen = domen
         self.url = url
         self.data = data
         self.headers = headers

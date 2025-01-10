@@ -2,18 +2,17 @@ import logging
 
 from config import configure_logging
 from Searcher import Searcher
-from Changer import HeaderChanger
-from test import TestPars
-from Parser import Parser
 
 
 def main():
     log = logging.getLogger(__name__)
     log.info("Start program!")
     
-    # url = "https://habr.com/ru/search/"
-    url = "https://api.github.com"
+    url = "https://habr.com/ru/search/"
+    # url = "https://api.github.com"
     # url = "https://habr.com/ru/companies/qrator/articles/416633/"
+    
+    domen = "https://habr.com"
     
     header = {"user-agent": "user"}
     
@@ -26,8 +25,11 @@ def main():
 
     # Parser(url).load_src()
     
-    Searcher(url, data).post_list_by_query()
+    searcher = Searcher(url, domen, data)
+    searcher.search()
+    searcher.get_all_articles()
     
+    # searcher.save_articles_link()
 
 
 
