@@ -22,8 +22,8 @@ class Parser:
         self.url = url
         self.data = data
         self.headers = headers
-
-
+    
+    # Метод для создания объекта с ответом от сайта
     def load_src(self):
         self.response = req.get(self.url, params=self.data, headers=self.headers)
         if not self.response.ok:
@@ -39,16 +39,9 @@ class Parser:
         
         with open(Path(Paths.DATA_PATH, Const.HEAD), "w", encoding="utf-8") as file:
             json.dump(dict(self.response.headers), file, indent=4)
-
+    
     def beautiful_soup(self):
         with open(Const.PAGE) as file:
             src = file.read()
         
         self.soup = BeautifulSoup(src, "lxml")
-
-    # def get_new_response(self, **kwargs):
-    #     if "url" in kwargs.keys():
-    #         self.url = kwargs["url"]
-    #     print("kwargs:", self.url)
-    #     self.response = req.get(self.url, params=self.data, headers=self.headers)
-        # print(self.response.url)

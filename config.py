@@ -10,7 +10,8 @@ class Paths:
 
 @dataclass
 class Const:
-    LIMIT_FOR_PAGE_PARSING = 100
+    # Количество старниц для сбора статей по поисковому запросу
+    LIMIT_FOR_PAGE_PARSING = 10
     # Имя файла для сохранения страницы
     PAGE = "index.html"
     # Имя файла для сохранения заголовков страницы

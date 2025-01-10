@@ -31,6 +31,8 @@ class SearchDriver(Parser):
         log.debug(f"Сообщение из response_by_query, url: {self.response.url}")
         log.info(f"Used URL: {self.response.url}")
     
+    
+    
     def create_file_for_articles_link(self):
         with open(Path(Paths.DATA_PATH, Const.ARCTICLES), "w") as file:
             file.write(f'## Список статей по запросу "{" ".join(self.raw_query)}"\n\n')
@@ -45,6 +47,8 @@ class SearchDriver(Parser):
         self.create_file_for_articles_link()
         self.save_articles_link()
     
+    
+    # Парсит поисковый запрос забирая названия найденных статей и ссылки сохраняя в `self.articles_dict`
     def collect_articles(self, **kwargs):
         if "response_txt" in kwargs.keys():
             response_txt = kwargs["response_txt"]
@@ -52,7 +56,6 @@ class SearchDriver(Parser):
             response_txt = self.response.text
         
         self.soup = BeautifulSoup(response_txt, "lxml")
-        # log.debug(self.soup.find("body").text)
         
         with open(Path(Paths.DATA_PATH, Const.PAGE), "w", encoding="utf-8") as file:
             file.write(str(self.soup))
@@ -70,65 +73,3 @@ class SearchDriver(Parser):
             self.articles_dict.update(article_dict)
         
         log.debug(f"Найдено {len(self.articles_dict)} статей на странице")
-            # log.debug(self.domen + block.get("href"))
-            # for child in block.children:
-            #     log.debug(child)
-
-
-        # for block in blocks:
-        #     post_title = 
-        #     post_link
-        #     log.debug(
-        
-        #     )
-        # print(self.response.json())
-    # def search(self):
-    #     self.response_by_query()
-        
-    #     if not len(self.raw_query):
-    #         log.error("Введите ключевые слова для запроса!")
-    #         raise SystemExit
-        
-    #     self.collect_articles()
-
-
-# class Searcher(Parser):
-#     def htmlSearchOnePage(self):
-#         self.bsoup = BeautifulSoup(self.response.text, 'html.parser')
-#         # print(self.bsoup.title)
-#         # print(self.bsoup)
-#         # blocks = self.bsoup.find(attrs={"class": "tm-articles-list__item"})
-#         blocks = self.bsoup.find_all(attrs={"data-test-id": "article-snippet-title-link"})
-        
-#         for element in blocks:
-#             print(element.text)
-        
-#         # ids = self.bsoup.find_all(id=True)
-#         # i = 0
-#         # for element in ids:
-#         #     id_value = element.get('data-test-id')
-#         #     content = element.get_text()
-        
-#         #     if id_value == "articles-list-item":
-#         #         print(f"ID: {id_value}")
-#         #         print(f"Содержимое: {content}\n")
-#         #         i += 1
-
-
-#     def htmlSearchAllPages(self):
-#         for page_num in range(1, Const.LIMIT_FOR_PAGE_PARSING):
-#             self.url = self.base_url + f"page{page_num}"
-#             self.getResponseNoExept()
-#             if self.response.status_code != 200:
-#                 break
-            
-#             self.htmlSearchOnePage()
-#         log.info(f"Найдено {page_num} страниц")
-        # elements = self.bsoup.find_all(id="specific_id")
-        # for element in elements:
-        #     content = element.get_text()
-        #     print(content)
-        
-        # for resp in self.bsoup.find_all('a'):
-            # print(resp.get("article-snippet-title-link"))
-    

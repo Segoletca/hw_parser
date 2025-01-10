@@ -15,7 +15,7 @@ def main():
     
     domen = "https://habr.com"
     
-    headers = {"user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"}
+    headers = {"user-agent": "UserHostName"}
     
     data = {
         # "q": "http",
@@ -24,12 +24,11 @@ def main():
         # "format": "json",
     }
 
-    # Parser(url).load_src()
     
-    searcher = Searcher(url, domen, data, headers)
-    searcher.search()
+    searcher = Searcher(url, domen, data, headers) # Создаем объект парсера
     
-    searcher.get_all_articles()
+    searcher.search() # Метод для поиска статей c запросом из командной строки
+    searcher.get_all_articles() # Аналог `.search()`, но парсит первые N страниц 
     
     # searcher.save_articles_link()
 
