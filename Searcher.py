@@ -36,7 +36,7 @@ class Searcher(SearchDriver):
         
         # Save
         self.create_file_for_articles_link()
-        with open(Path(Paths.DATA_PATH, Const.ARCTICLES), "a") as file:
-            file.write(f'\n## Страница {page_num}\n')
+        # with open(Path(Paths.DATA_PATH, Const.ARCTICLES), "a") as file:
+        #     file.write(f'\n## Страница {page_num}\n')
         self.save_articles_link()
         log.debug(self.response.url)
