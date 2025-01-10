@@ -28,7 +28,7 @@ def main():
     searcher = Searcher(url, domen, data, headers) # Создаем объект парсера
     
     searcher.search() # Метод для поиска статей c запросом из командной строки
-    searcher.get_all_articles() # Аналог `.search()`, но парсит первые N страниц 
+    # searcher.get_all_articles() # Аналог `.search()`, но парсит первые N страниц 
     
     # searcher.save_articles_link()
 
