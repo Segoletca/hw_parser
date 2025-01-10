@@ -1,64 +1,47 @@
-import requests as re
+import requests as req
 from logging import getLogger
 import json
-from config import Paths
+from config import Paths, Const
+from pathlib import Path
+from bs4 import BeautifulSoup
 
 
 log = getLogger(__name__)
 
 """_summary_
-    - Общий метод для сохранения json `saveJson`
-    - Метод для сохранения заголовков `saveHeader`
+    - Метод для предварительного сохранения страницы `load_src`
+
 Raises:
     SystemExit: _description_
 """
 
 
 class Parser:
-    def __init__(self, url, data):
-        self.savingObj = None
-        self.fileName = None
+    def __init__(self, url, data=None, headers=None):
         self.url = url
-        self.base_url = url
         self.data = data
-        self.response = re.get(self.url, self.data)
-        if self.response.status_code == 404:
+        self.headers = headers
+
+
+    def load_src(self):
+        self.response = req.get(self.url, params=self.data, headers=self.headers)
+        if not self.response.ok:
             log.warning("Ошибка get запроса!")
             log.error("Не найдено! Возможно URL указан неверно.")
             raise SystemExit
-        # if response == re.models.Response
-            
-        self.headers = self.response.headers
-        # self.test = self.response.json
-
-
-    def getResponseNoExept(self):
-        self.response = re.get(self.url, self.data)
-
-    def saveJson(self):
-        # Needs: - fileName and savingObj
-        with open(f"{Paths.DATA_PATH}/{self.fileName}", "w") as file:
-            json.dump(self.savingObj, file, indent=4)
-
-    def saveHeader(self):
-        # In json format
-        self.fileName = "raw_head_out.json"
-        self.savingObj = dict(self.headers)
         
-        self.saveJson()
-        log.info(f"Файл {self.fileName} был сохранен.")
+        self.used_url = self.response.url
+        self.used_headers = self.response.headers
         
-        self.fileName, self.savingObj = None, None
-
-    def saveBody(self):
-        self.fileName = "raw_body_out.json"
-        self.savingObj = dict(self.response.text)
+        with open(Path(Paths.DATA_PATH, Const.PAGE), "w", encoding="utf-8") as file:
+            file.write(self.response.text)
         
-        self.saveJson()
-        log.info(f"Файл {self.fileName} был сохранен.")
+        with open(Path(Paths.DATA_PATH, Const.HEAD), "w", encoding="utf-8") as file:
+            json.dump(dict(self.response.headers), file, indent=4)
 
-    # def res(self):
-    #     # with open(f"{Paths.DATA_PATH}/raw_body_out.json", "w") as file:
-    #     #     file.write(self.response.text)
-    #     self.saveHeader()
-    #     print()
+    def beautiful_soup(self):
+        with open(Const.PAGE) as file:
+            src = file.read()
+        
+        self.soup = BeautifulSoup(src, "lxml")
+
