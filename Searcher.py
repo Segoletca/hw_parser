@@ -12,6 +12,11 @@ class Searcher(SearchDriver):
         self.response_by_query()
                 
         self.collect_articles()
+        
+        # Save
+        self.create_file_for_articles_link()
+        self.save_articles_link()
+        log.debug(self.response.url)
     
     # Повтоярет поведение `search`, только сохраняет первые 90 статей (9 страниц)
     def get_all_articles(self):
